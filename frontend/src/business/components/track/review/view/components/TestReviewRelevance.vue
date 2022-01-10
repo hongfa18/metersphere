@@ -45,6 +45,7 @@
               </el-table-column>
 
               <el-table-column
+                v-if="hasLicense()"
                 prop="versionName"
                 :label="$t('test_track.case.version')"
                 column-key="versionId"
@@ -203,12 +204,17 @@ export default {
       }
     },
     mounted() {
-      this.getVersionOptions();
+      if (hasLicense()) {
+        this.getVersionOptions();
+      }
     },
     updated() {
       this.toggleSelection(this.testReviews);
     },
     methods: {
+      hasLicense(){
+        return hasLicense();
+      },
       openTestReviewRelevanceDialog() {
         this.getProject();
         this.dialogFormVisible = true;

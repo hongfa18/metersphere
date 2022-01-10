@@ -505,7 +505,7 @@ public class TestCaseService {
      * @param request
      * @return
      */
-    public Pager<List<TestCase>> getTestCaseRelateList(QueryTestCaseRequest request, int goPage, int pageSize) {
+    public Pager<List<TestCaseDTO>> getTestCaseRelateList(QueryTestCaseRequest request, int goPage, int pageSize) {
         setDefaultOrder(request);
         request.getOrders().forEach(order -> {
             order.setPrefix("test_case");
@@ -517,7 +517,7 @@ public class TestCaseService {
         return PageUtils.setPageInfo(page, getTestCaseByNotInPlan(request));
     }
 
-    public List<TestCase> getTestCaseByNotInPlan(QueryTestCaseRequest request) {
+    public List<TestCaseDTO> getTestCaseByNotInPlan(QueryTestCaseRequest request) {
         return extTestCaseMapper.getTestCaseByNotInPlan(request);
     }
 

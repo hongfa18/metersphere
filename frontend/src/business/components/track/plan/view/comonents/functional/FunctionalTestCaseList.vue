@@ -58,6 +58,18 @@
           min-width="120px"/>
 
         <ms-table-column
+          prop="versionId"
+          :field="item"
+          :filters="versionFilters"
+          :fields-width="fieldsWidth"
+          :label="$t('commons.version')"
+          min-width="120px">
+           <template v-slot:default="scope">
+            <span>{{ scope.row.versionName }}</span>
+          </template>
+        </ms-table-column>
+
+        <ms-table-column
           prop="priority"
           :field="item"
           :fields-width="fieldsWidth"
@@ -258,7 +270,7 @@ import {
   TEST_PLAN_FUNCTION_TEST_CASE,
   TokenKey,
 } from "@/common/js/constants";
-import {getCurrentProjectID, hasPermission} from "@/common/js/utils";
+import {getCurrentProjectID, hasPermission, hasLicense} from "@/common/js/utils";
 import PriorityTableItem from "../../../../common/tableItems/planview/PriorityTableItem";
 import StatusTableItem from "../../../../common/tableItems/planview/StatusTableItem";
 import TypeTableItem from "../../../../common/tableItems/planview/TypeTableItem";
@@ -384,7 +396,7 @@ export default {
       },
       selectDataRange: "all",
       testCaseTemplate: {},
-
+      versionFilters: []
     };
   },
   props: {
@@ -395,6 +407,7 @@ export default {
     selectNodeIds: {
       type: Array
     },
+    currentVersion: null
   },
   computed: {
     editTestPlanTestCaseOrder() {
@@ -418,6 +431,10 @@ export default {
     condition() {
       this.$emit('setCondition', this.condition);
     },
+    currentVersion(){
+      this.condition.versionId = this.currentVersion;
+      this.initTableData();
+    }
   },
   created() {
     this.condition.orders = getLastTableSortField(this.tableHeaderKey);
@@ -433,6 +450,7 @@ export default {
     this.hasEditPermission = hasPermission('PROJECT_TRACK_PLAN:READ+EDIT');
     this.getMaintainerOptions();
     this.getTemplateField();
+    this.getVersionOptions();
   },
   beforeDestroy() {
     hub.$off("openFailureTestCase");
@@ -626,6 +644,16 @@ export default {
           return {text: u.id + '(' + u.name + ')', value: u.id};
         });
       });
+    },
+    getVersionOptions() {
+      if (hasLicense()) {
+        this.$get('/project/version/get-project-versions/' + getCurrentProjectID(), response => {
+          this.versionOptions= response.data;
+          this.versionFilters = response.data.map(u => {
+            return {text: u.name, value: u.id};
+          });
+        });
+      }
     },
   }
 };

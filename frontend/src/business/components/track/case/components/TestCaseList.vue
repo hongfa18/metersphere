@@ -136,7 +136,7 @@
           :filters="versionFilters"
           min-width="100px"
           prop="versionId">
-          <template v-slot:default="scope">
+           <template v-slot:default="scope">
             <span>{{ scope.row.versionName }}</span>
           </template>
         </ms-table-column>
@@ -148,8 +148,6 @@
           :label="$t('test_track.case.module')"
           min-width="150px">
         </ms-table-column>
-
-
 
         <ms-table-column
           prop="updateTime"

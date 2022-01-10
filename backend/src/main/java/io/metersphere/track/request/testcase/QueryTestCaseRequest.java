@@ -57,6 +57,4 @@ public class QueryTestCaseRequest extends BaseQueryRequest {
     private String operator;
     //操作时间
     private Long operationTime;
-    private String refId;
-    private String versionId;
 }

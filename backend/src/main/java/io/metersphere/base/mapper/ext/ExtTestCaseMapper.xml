@@ -157,10 +157,14 @@
         </where>
     </sql>
 
-    <select id="getTestCaseByNotInPlan" resultType="io.metersphere.base.domain.TestCase">
+    <select id="getTestCaseByNotInPlan" resultType="io.metersphere.track.dto.TestCaseDTO">
         select test_case.id, test_case.name, test_case.priority, test_case.type, test_case.review_status,
-        test_case.num, test_case.custom_num, test_case.priority, test_case.tags, test_case.create_time, test_case.update_time
-        from test_case as test_case
+        test_case.num, test_case.custom_num, test_case.priority, test_case.tags, test_case.create_time,
+        test_case.update_time,
+        project_version.name versionName, test_case.version_id versionId
+        from test_case
+        left join project_version on project_version.project_id = test_case.project_id and project_version.id =
+        test_case.version_id
         <if test="!request.repeatCase">
             left join test_plan_test_case as T2 on test_case.id=T2.case_id and T2.plan_id =#{request.planId}
         </if>
